@@ -39,20 +39,11 @@ class MuseoDAO:
             return None
         else:
             cursor = cnx.cursor(dictionary = True)
-            if nome is None:
-                query = 'SELECT * FROM museo'
-                cursor.execute(query)
-                for m in cursor:
-                    museo = Museo(int(m['id']), m['nome'], m['tipologia'])
-                    lista_musei_filtro.append(museo)
-
-                return lista_musei_filtro
-            else:
-                query = f'SELECT * FROM museo WHERE nome = %s'
-                cursor.execute(query, (nome,))
-                for m in cursor:
-                    museo = Museo(m['id'],m['nome'],m['tipologia'])
-                    lista_musei_filtro.append(museo)
+            query = f'SELECT * FROM museo WHERE nome = %s'
+            cursor.execute(query, (nome,))
+            for m in cursor:
+                museo = Museo(m['id'],m['nome'],m['tipologia'])
+                lista_musei_filtro.append(museo)
 
         cursor.close()
         cnx.close()
