@@ -11,3 +11,49 @@ class MuseoDAO:
         pass
 
     # TODO
+    @staticmethod
+    def leggi_dati_museo():
+        lista_musei = []
+        cnx = ConnessioneDB.get_connection()
+        if cnx is None:
+            print('Connection Failed')
+            return None
+        else:
+            cursor = cnx.cursor(dictionary=True)
+            query = 'SELECT * FROM museo'
+            cursor.execute(query)
+            for m in cursor:
+                museo = Museo(int(m['id']),m['nome'],m['tipologia'])
+                lista_musei.append(museo.nome)
+
+        cursor.close()
+        cnx.close()
+        return lista_musei
+
+    @staticmethod
+    def leggi_filtro_museo(nome):
+        lista_musei_filtro = []
+        cnx = ConnessioneDB.get_connection()
+        if cnx is None:
+            print('Connection Failed')
+            return None
+        else:
+            cursor = cnx.cursor(dictionary = True)
+            if nome is None:
+                query = 'SELECT * FROM museo'
+                cursor.execute(query)
+                for m in cursor:
+                    museo = Museo(int(m['id']), m['nome'], m['tipologia'])
+                    lista_musei_filtro.append(museo)
+
+                return lista_musei_filtro
+            else:
+                query = f'SELECT * FROM museo WHERE nome = %s'
+                cursor.execute(query, (nome,))
+                for m in cursor:
+                    museo = Museo(m['id'],m['nome'],m['tipologia'])
+                    lista_musei_filtro.append(museo)
+
+        cursor.close()
+        cnx.close()
+        return lista_musei_filtro
